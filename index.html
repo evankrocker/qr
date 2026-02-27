@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>QR Code Generator</h1>
+        <p class="subtle">Enter text/URL, generate a QR code, then download it as a PNG.</p>
+      </header>
+
+      <section class="card">
+        <label class="label" for="qrText">Text to encode</label>
+        <textarea
+          id="qrText"
+          class="textarea"
+          rows="3"
+          placeholder="e.g. https://example.com or any text"
+          spellcheck="false"
+        ></textarea>
+
+        <div class="row">
+          <div class="field">
+            <label class="label" for="size">Size (px)</label>
+            <input id="size" class="input" type="number" min="128" max="1024" step="16" value="320" />
+          </div>
+
+          <div class="field">
+            <label class="label" for="margin">Margin (modules)</label>
+            <input id="margin" class="input" type="number" min="0" max="10" step="1" value="2" />
+          </div>
+
+          <div class="field">
+            <label class="label" for="ecLevel">Error correction</label>
+            <select id="ecLevel" class="select">
+              <option value="L">L (7%)</option>
+              <option value="M" selected>M (15%)</option>
+              <option value="Q">Q (25%)</option>
+              <option value="H">H (30%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="generateBtn" class="btn primary" type="button">Generate QR</button>
+          <button id="downloadBtn" class="btn" type="button" disabled>Download PNG</button>
+          <button id="clearBtn" class="btn ghost" type="button">Clear</button>
+        </div>
+
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+
+        <div class="preview">
+          <div class="qrWrap">
+            <canvas id="qrCanvas" width="320" height="320" aria-label="QR code preview"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <small class="subtle">
+          Client-side only. Uses <a href="https://github.com/soldair/node-qrcode" target="_blank" rel="noreferrer">qrcode</a> via CDN.
+        </small>
+      </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
