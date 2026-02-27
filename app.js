@@ -23,7 +23,8 @@
       .replace(/[^a-z0-9]+/gi, "-")
       .replace(/^-+|-+$/g, "")
       .toLowerCase();
-    return `${base || "qr"}-${Date.now()}.png`;
+    return \
+`${base || "qr"}-${Date.now()}.png`;
   }
 
   async function renderQR() {
@@ -36,6 +37,13 @@
       return;
     }
 
+    // If the CDN script failed to load, QRCode will be undefined.
+    if (typeof window.QRCode === "undefined") {
+      downloadBtn.disabled = true;
+      setStatus("QR library failed to load. If you are offline, connect to the internet and reload.");
+      return;
+    }
+
     const px = Math.max(128, Math.min(1024, Number(size.value) || 320));
     const m = Math.max(0, Math.min(10, Number(margin.value) || 2));
     const ec = ecLevel.value || "M";
@@ -44,7 +52,7 @@
     canvas.height = px;
 
     try {
-      await QRCode.toCanvas(canvas, value, {
+      await window.QRCode.toCanvas(canvas, value, {
         errorCorrectionLevel: ec,
         margin: m,
         width: px,
@@ -59,7 +67,7 @@
     } catch (err) {
       console.error(err);
       downloadBtn.disabled = true;
-      setStatus("Could not generate QR code. Check your input and try again.");
+      setStatus("Could not generate QR code. Open DevTools Console to see the error.");
     }
   }
 
@@ -92,7 +100,4 @@
   qrText.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") renderQR();
   });
-
-  // Generate on first load if there is prefilled text (or you can remove this)
-  if (qrText.value.trim()) renderQR();
 })();
